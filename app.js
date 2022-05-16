@@ -7,7 +7,7 @@ app.get("/api/topics", getTopics);
 
 //custom errors
 app.all("/*", (req, res, next) => {
-  next({ status: 404, msg: "not found", detail: "inavlid endpoint/method" });
+  res.status(404).send({ msg: "not found", detail: "inavlid endpoint/method" });
 });
 
 app.use((err, req, res, next) => {
