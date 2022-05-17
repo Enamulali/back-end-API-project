@@ -82,8 +82,8 @@ describe("GET /api/articles/:articleid", () => {
 });
 
 describe("PATCH /api/articles/:articleid", () => {
-  const articleid = 2;
   test("status: 200, should respond with updated article", () => {
+    const articleid = 2;
     return request(app)
       .patch(`/api/articles/${articleid}`)
       .send({ inc_votes: 1 })
@@ -91,6 +91,7 @@ describe("PATCH /api/articles/:articleid", () => {
       .then((result) => expect(result.body.article.votes).toEqual(1));
   });
   test("status: 200, should respond with updated article when passed negative vote count", () => {
+    const articleid = 2;
     return request(app)
       .patch(`/api/articles/${articleid}`)
       .send({ inc_votes: -10 })
