@@ -1,10 +1,8 @@
 const db = require("../db/connection");
 
 exports.selectArticleByID = (articleid) => {
-  //change test
-  //force comment_counter as INT type casting
   const queryStr = `SELECT articles.*,
-  CAST(COUNT(comments.article_id) AS INT) AS comment_counter
+  CAST(COUNT(comments.article_id) AS INT) AS comment_count
   FROM articles LEFT JOIN comments 
   ON articles.article_id = comments.article_id 
   WHERE articles.article_id = $1 GROUP BY articles.article_id`;
@@ -18,7 +16,7 @@ exports.selectArticleByID = (articleid) => {
         detail: `please enter valid article number`,
       });
     }
-    return result.rows[0]; //parse comment_count
+    return result.rows[0];
   });
 };
 

@@ -75,14 +75,14 @@ describe("/api/articles", () => {
         body: "some gifs",
         created_at: "2020-11-03T09:12:00.000Z",
         votes: 0,
-        comment_counter: 2,
+        comment_count: 2,
       };
       return request(app)
         .get(`/api/articles/${articleid}`)
         .expect(200)
         .then((result) => {
           expect(result.body.article).toEqual(thirdArticle);
-          expect(result.body.article.comment_counter).toBe(2);
+          expect(result.body.article.comment_count).toBe(2);
         });
     });
   });
