@@ -5,6 +5,8 @@ const {
   patchArticleByID,
 } = require("./controllers/articles.controller");
 
+const { getUsers } = require("./controllers/users.controller");
+
 const app = express();
 
 app.use(express.json());
@@ -13,6 +15,8 @@ app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:articleid", getArticleByID);
 app.patch("/api/articles/:articleid", patchArticleByID);
+
+app.get("/api/users", getUsers);
 
 app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "not found", detail: "invalid endpoint/method" });
