@@ -39,7 +39,7 @@ describe("/api/topics", () => {
     });
   });
 });
-
+//make request for article with no commennts
 describe("/api/articles", () => {
   describe("GET /api/articles/:articleid", () => {
     test("status: 200, responds with a single matching article", () => {
@@ -83,6 +83,26 @@ describe("/api/articles", () => {
         .then((result) => {
           expect(result.body.article).toEqual(thirdArticle);
           expect(result.body.article.comment_count).toBe(2);
+        });
+    });
+    test("status: 200, should return selected article, if no comment for it exists", () => {
+      const articleid = 7;
+      const seventhArticle = {
+        article_id: 7,
+        title: "Z",
+        topic: "mitch",
+        author: "icellusedkars",
+        body: "I was hungry.",
+        created_at: "2020-01-07T14:08:00.000Z",
+        votes: 0,
+        comment_count: 0,
+      };
+      return request(app)
+        .get(`/api/articles/${articleid}`)
+        .expect(200)
+        .then((result) => {
+          expect(result.body.article).toEqual(seventhArticle);
+          expect(result.body.article.comment_count).toBe(0);
         });
     });
   });
@@ -170,6 +190,7 @@ describe("/api/articles", () => {
         });
     });
   });
+  describe("GET /api/articles", () => {});
 });
 
 describe("/api/users", () => {
