@@ -80,3 +80,47 @@ describe("GET /api/articles/:articleid", () => {
       });
   });
 });
+
+describe("PATCH /api/articles/:articleid", () => {
+  const articleid = 2;
+  test("status: 200, should respond with updated article", () => {
+    return request(app)
+      .patch(`/api/articles/${articleid}`)
+      .send({ inc_votes: 1 })
+      .expect(200)
+      .then((result) => expect(result.body.article.votes).toEqual(1));
+  });
+  test("status: 200, should respond with updated article when passed negative vote count", () => {
+    return request(app)
+      .patch(`/api/articles/${articleid}`)
+      .send({ inc_votes: -10 })
+      .expect(200)
+      .then((result) => expect(result.body.article.votes).toEqual(-10));
+  });
+  test("status: 404, should respond with error message article not found if incorrect endpoint", () => {
+    const articleid = 983;
+    return request(app)
+      .patch(`/api/articles/${articleid}`)
+      .send({ inc_votes: -10 })
+      .expect(404)
+      .then((res) => {
+        expect(res.body.msg).toBe(
+          `article with id: ${articleid} does not exist`
+        );
+        expect(res.body.detail).toBe(`please enter valid article number`);
+      });
+  });
+  test("status: 400, should respond with error message bad request when given invalid data type", () => {
+    const articleid = 2;
+    return request(app)
+      .patch(`/api/articles/${articleid}`)
+      .send({ inc_votes: "ABC" })
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request");
+        expect(res.body.detail).toBe(
+          "invalid data type, please enter a valid data type"
+        );
+      });
+  });
+});
