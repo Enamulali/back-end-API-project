@@ -1,12 +1,18 @@
 const express = require("express");
 const { getTopics } = require("./controllers/topics.controller");
-const { getArticleByID } = require("./controllers/articles.controller");
+const {
+  getArticleByID,
+  patchArticleByID,
+} = require("./controllers/articles.controller");
 
 const app = express();
+
+app.use(express.json());
 
 app.get("/api/topics", getTopics);
 
 app.get("/api/articles/:articleid", getArticleByID);
+app.patch("/api/articles/:articleid", patchArticleByID);
 
 app.all("/*", (req, res, next) => {
   res.status(404).send({ msg: "not found", detail: "invalid endpoint/method" });
@@ -24,7 +30,7 @@ app.use((err, req, res, next) => {
 
 //custom error handler
 app.use((err, req, res, next) => {
-  if (err.status && err.msg && err.detail) {
+  if (err.status) {
     res.status(err.status).send({ msg: err.msg, detail: err.detail });
   } else next(err);
 });
