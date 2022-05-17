@@ -3,6 +3,7 @@ const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticleByID,
   patchArticleByID,
+  getArticlesWithComments,
 } = require("./controllers/articles.controller");
 
 const { getUsers } = require("./controllers/users.controller");
