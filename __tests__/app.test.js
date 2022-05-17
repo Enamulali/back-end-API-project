@@ -124,4 +124,17 @@ describe("PATCH /api/articles/:articleid", () => {
         );
       });
   });
+  test("status: 400, should respond with error message bad request when given incorrect or missing data", () => {
+    const articleid = 2;
+    return request(app)
+      .patch(`/api/articles/${articleid}`)
+      .send({})
+      .expect(400)
+      .then((res) => {
+        expect(res.body.msg).toBe("bad request");
+        expect(res.body.detail).toBe(
+          "invalid data type, please enter a valid data type"
+        );
+      });
+  });
 });

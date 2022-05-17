@@ -18,6 +18,15 @@ exports.selectArticleByID = (articleid) => {
 exports.updateArticleByID = (inc_votes, articleid) => {
   const queryStr = `UPDATE articles SET votes = votes + $1 WHERE article_id = $2 RETURNING *`;
   const values = [inc_votes, articleid];
+
+  if (!inc_votes) {
+    return Promise.reject({
+      status: 400,
+      msg: `bad request`,
+      detail: `invalid data type, please enter a valid data type`,
+    });
+  }
+
   return db.query(queryStr, values).then((result) => {
     if (!result.rows.length) {
       return Promise.reject({
