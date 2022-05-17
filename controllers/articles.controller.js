@@ -1,6 +1,7 @@
 const {
   selectArticleByID,
   updateArticleByID,
+  fetchComments,
 } = require("../models/articles.model");
 
 exports.getArticleByID = (req, res, next) => {
