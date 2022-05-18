@@ -3,6 +3,7 @@ const testData = require("../db/data/test-data");
 const db = require("../db/connection");
 const app = require("../app");
 const request = require("supertest");
+require("jest-sorted");
 
 beforeEach(() => seed(testData));
 
@@ -19,10 +20,12 @@ describe("/api/topics", () => {
         .then((result) => {
           expect(result.body.topics).toHaveLength(3);
           result.body.topics.forEach((topic) => {
-            expect(topic).toMatchObject({
-              description: expect.any(String),
-              slug: expect.any(String),
-            });
+            expect(topic).toEqual(
+              expect.objectContaining({
+                description: expect.any(String),
+                slug: expect.any(String),
+              })
+            );
           });
         });
     });
@@ -39,7 +42,7 @@ describe("/api/topics", () => {
     });
   });
 });
-//make request for article with no commennts
+
 describe("/api/articles", () => {
   describe("GET /api/articles/:articleid", () => {
     test("status: 200, responds with a single matching article", () => {
@@ -62,7 +65,6 @@ describe("/api/articles", () => {
           );
         });
     });
-    //test for left join
   });
   describe("GET /api/articles/:articleid COMMENT COUNT", () => {
     test("status: 200, should return selected article, with a comment count", () => {
@@ -190,7 +192,41 @@ describe("/api/articles", () => {
         });
     });
   });
-  describe("GET /api/articles", () => {});
+  describe("GET /api/articles", () => {
+    test("status: 200, should respond with an array of all articles", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeInstanceOf(Array);
+          expect(result.body.articles).toHaveLength(12);
+          result.body.articles.forEach((article) => {
+            expect(article).toEqual(
+              expect.objectContaining({
+                article_id: expect.any(Number),
+                title: expect.any(String),
+                topic: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+                created_at: expect.any(String),
+                votes: expect.any(Number),
+                comment_count: expect.any(Number),
+              })
+            );
+          });
+        });
+    });
+    test("status: 200, should return all articles sorted in order of descending date", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
+  });
 });
 
 describe("/api/users", () => {
