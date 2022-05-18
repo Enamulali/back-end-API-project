@@ -133,6 +133,7 @@ describe("/api/articles", () => {
         });
     });
   });
+
   describe("PATCH /api/articles/:articleid", () => {
     test("status: 200, should respond with updated article", () => {
       const articleid = 2;
@@ -192,6 +193,7 @@ describe("/api/articles", () => {
         });
     });
   });
+
   describe("GET /api/articles", () => {
     test("status: 200, should respond with an array of all articles", () => {
       return request(app)
@@ -275,6 +277,7 @@ describe("/api/articles", () => {
         .expect(200)
         .then((result) => {
           expect(result.body.comments).toBeInstanceOf(Array);
+          expect(result.body.comments).toHaveLength(0);
         });
     });
   });
