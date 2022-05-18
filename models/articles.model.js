@@ -62,14 +62,6 @@ exports.selectArticleComments = (articleid) => {
   const values = [articleid];
 
   return db.query(queryStr, values).then((result) => {
-    if (!result.rows.length) {
-      return Promise.reject({
-        status: 404,
-        msg: `article with id: ${articleid} does not exist`,
-        detail: `please enter valid article number`,
-      });
-    }
-
     return result.rows;
   });
 };
