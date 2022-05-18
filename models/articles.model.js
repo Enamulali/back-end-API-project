@@ -44,3 +44,15 @@ exports.updateArticleByID = (inc_votes, articleid) => {
     return result.rows[0];
   });
 };
+
+exports.selectAllArticles = () => {
+  let queryStr = `SELECT articles.*,
+  CAST(COUNT(comments.article_id) AS INT) AS comment_count
+  FROM articles 
+  LEFT JOIN comments ON comments.article_id = articles.article_id
+  GROUP BY articles.article_id ORDER BY created_at DESC`;
+
+  return db.query(queryStr).then((result) => {
+    return result.rows;
+  });
+};
