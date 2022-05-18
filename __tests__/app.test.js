@@ -193,7 +193,7 @@ describe("/api/articles", () => {
     });
   });
   describe("GET /api/articles", () => {
-    test("status: 200, should respond with an array of all articles, sorted by date descending", () => {
+    test("status: 200, should respond with an array of all articles", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -224,17 +224,6 @@ describe("/api/articles", () => {
           expect(result.body.articles).toBeSortedBy("created_at", {
             descending: true,
           });
-        });
-    });
-  });
-  describe("GET /api/articles ERRORS", () => {
-    test("status: 404, should respond with error message if passed invalid path", () => {
-      return request(app)
-        .get(`/api/artiKleZ`)
-        .expect(404)
-        .then((res) => {
-          expect(res.body.msg).toBe("not found");
-          expect(res.body.detail).toBe("invalid endpoint/method");
         });
     });
   });
