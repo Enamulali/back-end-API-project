@@ -133,6 +133,7 @@ describe("/api/articles", () => {
         });
     });
   });
+
   describe("PATCH /api/articles/:articleid", () => {
     test("status: 200, should respond with updated article", () => {
       const articleid = 2;
@@ -192,6 +193,7 @@ describe("/api/articles", () => {
         });
     });
   });
+
   describe("GET /api/articles", () => {
     test("status: 200, should respond with an array of all articles", () => {
       return request(app)
@@ -224,6 +226,84 @@ describe("/api/articles", () => {
           expect(result.body.articles).toBeSortedBy("created_at", {
             descending: true,
           });
+        });
+    });
+  });
+  describe("GET /api/articles/:articleid/comments", () => {
+    test("status: 200, should return an array of comments for chosen article", () => {
+      const articleid = 3;
+      const thirdArticle = [
+        {
+          comment_id: 10,
+          body: "git push origin master",
+          article_id: 3,
+          author: "icellusedkars",
+          votes: 0,
+          created_at: "2020-06-20T07:24:00.000Z",
+        },
+        {
+          comment_id: 11,
+          body: "Ambidextrous marsupial",
+          article_id: 3,
+          author: "icellusedkars",
+          votes: 0,
+          created_at: "2020-09-19T23:10:00.000Z",
+        },
+      ];
+      return request(app)
+        .get(`/api/articles/${articleid}/comments`)
+        .expect(200)
+        .then((result) => {
+          expect(result.body.comments).toBeInstanceOf(Array);
+          expect(result.body.comments).toHaveLength(2);
+          result.body.comments.forEach((comment) => {
+            expect(comment).toEqual(
+              expect.objectContaining({
+                comment_id: expect.any(Number),
+                votes: expect.any(Number),
+                created_at: expect.any(String),
+                author: expect.any(String),
+                body: expect.any(String),
+              })
+            );
+          });
+          expect(result.body.comments).toEqual(thirdArticle);
+        });
+    });
+    test("status: 200, should return an empty array if no comments exist for chosen article", () => {
+      const articleid = 7;
+      return request(app)
+        .get(`/api/articles/${articleid}/comments`)
+        .expect(200)
+        .then((result) => {
+          expect(result.body.comments).toBeInstanceOf(Array);
+          expect(result.body.comments).toHaveLength(0);
+        });
+    });
+  });
+  describe("GET /api/articles/:articleid/comments ERRORS", () => {
+    test("status: 404, should respond with error message article not found if incorrect endpoint", () => {
+      const articleid = 983;
+      return request(app)
+        .get(`/api/articles/${articleid}/comments`)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe(
+            `article with id: ${articleid} does not exist`
+          );
+          expect(res.body.detail).toBe(`please enter valid article number`);
+        });
+    });
+    test("status: 400, should respond with error message bad request when given invalid data type", () => {
+      const articleid = "incorrect_path";
+      return request(app)
+        .get(`/api/articles/${articleid}/comments`)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
         });
     });
   });

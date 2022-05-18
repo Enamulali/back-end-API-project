@@ -56,3 +56,12 @@ exports.selectAllArticles = () => {
     return result.rows;
   });
 };
+
+exports.selectArticleComments = (articleid) => {
+  const queryStr = `SELECT * FROM comments WHERE article_id = $1`;
+  const values = [articleid];
+
+  return db.query(queryStr, values).then((result) => {
+    return result.rows;
+  });
+};
