@@ -65,3 +65,21 @@ exports.selectArticleComments = (articleid) => {
     return result.rows;
   });
 };
+
+exports.insertCommentByID = (author, body, articleid) => {
+  if (body === undefined || typeof body !== "string") {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+      detail: "invalid data type, please enter a valid data type",
+    });
+  }
+  return db
+    .query(
+      `INSERT INTO comments(body, author, article_id) VALUES ($1, $2, $3) RETURNING *`,
+      [body, author, articleid]
+    )
+    .then((result) => {
+      return result.rows[0];
+    });
+};

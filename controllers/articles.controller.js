@@ -3,6 +3,7 @@ const {
   updateArticleByID,
   selectAllArticles,
   selectArticleComments,
+  insertCommentByID,
 } = require("../models/articles.model");
 
 exports.getArticleByID = (req, res, next) => {
@@ -44,6 +45,19 @@ exports.getArticleComments = (req, res, next) => {
   Promise.all([selectArticleByID(articleid), selectArticleComments(articleid)])
     .then(([, result]) => {
       res.status(200).send({ comments: result });
+    })
+    .catch((err) => {
+      next(err);
+    });
+};
+
+exports.postCommentByID = (req, res, next) => {
+  const { articleid } = req.params;
+  const { username: author, body } = req.body;
+
+  insertCommentByID(author, body, articleid)
+    .then((result) => {
+      res.status(201).send({ addedComment: result });
     })
     .catch((err) => {
       next(err);

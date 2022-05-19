@@ -5,6 +5,7 @@ const {
   patchArticleByID,
   getAllArticles,
   getArticleComments,
+  postCommentByID,
 } = require("./controllers/articles.controller");
 
 const { getUsers } = require("./controllers/users.controller");
@@ -21,11 +22,15 @@ app.get("/api/articles/:articleid", getArticleByID);
 app.patch("/api/articles/:articleid", patchArticleByID);
 
 app.get("/api/articles/:articleid/comments", getArticleComments);
+app.post("/api/articles/:articleid/comments", postCommentByID);
 
 app.get("/api/users", getUsers);
 
 app.all("/*", (req, res, next) => {
-  res.status(404).send({ msg: "not found", detail: "invalid endpoint/method" });
+  res.status(404).send({
+    msg: "not found",
+    detail: "invalid endpoint/method",
+  });
 });
 
 //psql errors
@@ -34,6 +39,12 @@ app.use((err, req, res, next) => {
     res.status(400).send({
       msg: "bad request",
       detail: "invalid data type, please enter a valid data type",
+    });
+  }
+  if (err.code === "23503") {
+    res.status(404).send({
+      msg: "not found",
+      detail: "does the item exist?",
     });
   } else next(err);
 });
