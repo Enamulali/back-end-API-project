@@ -307,6 +307,128 @@ describe("/api/articles", () => {
         });
     });
   });
+
+  describe("POST /api/articles/:articleid/comments", () => {
+    test("status: 201, should add comment and respond with posted comment", () => {
+      const articleid = 7;
+      const newComment = {
+        username: "icellusedkars",
+        body: "This is a new comment",
+      };
+      return request(app)
+        .post(`/api/articles/${articleid}/comments`)
+        .send(newComment)
+        .expect(201)
+        .then((result) => {
+          expect(result.body.addedComment).toEqual(
+            expect.objectContaining({
+              comment_id: 19,
+              body: "This is a new comment",
+              article_id: 7,
+              author: "icellusedkars",
+              votes: 0,
+              created_at: expect.any(String),
+            })
+          );
+        });
+    });
+    test("status: 201, should respond with posted comment only with the specified keys, user should not be able to manipulate additonal keys", () => {
+      const articleid = 7;
+      const newComment = {
+        username: "icellusedkars",
+        body: "This is a new comment",
+        votes: 100,
+      };
+      return request(app)
+        .post(`/api/articles/${articleid}/comments`)
+        .send(newComment)
+        .expect(201)
+        .then((result) => {
+          expect(result.body.addedComment.votes).toBe(0);
+          expect(result.body.addedComment.body).toBe("This is a new comment");
+          expect(result.body.addedComment.author).toBe("icellusedkars");
+        });
+    });
+
+    test("status: 400, should return error when missing input values", () => {
+      const missingUsernameInput = {
+        username: "icellusedkars",
+      };
+
+      return request(app)
+        .post("/api/articles/7/comments")
+        .send(missingUsernameInput)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
+        });
+    });
+    test("status: 400, should return error when input incorrect values", () => {
+      const incorrectBodyComment = {
+        username: "icellusedkars",
+        body: ["incorrect", "input", "data"],
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(incorrectBodyComment)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
+        });
+    });
+    test("status: 404, should return error when username does not exist ", () => {
+      const commentFromUnknownUser = {
+        username: "notausername",
+        body: "This is the test body",
+      };
+      return request(app)
+        .post("/api/articles/1/comments")
+        .send(commentFromUnknownUser)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("not found");
+          expect(res.body.detail).toBe("does the item exist?");
+        });
+    });
+
+    test("status: 404, should respond with error message article not found if incorrect endpoint", () => {
+      const articleid = 983;
+      const newComment = {
+        username: "icellusedkars",
+        body: "This is a new comment",
+      };
+      return request(app)
+        .post(`/api/articles/${articleid}/comments`)
+        .send(newComment)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe("not found");
+          expect(res.body.detail).toBe(`does the item exist?`);
+        });
+    });
+    test("status: 400, should respond with error message bad request when given invalid data type", () => {
+      const articleid = "incorrect_path";
+      const newComment = {
+        username: "icellusedkars",
+        body: "This is a new comment",
+      };
+      return request(app)
+        .post(`/api/articles/${articleid}/comments`)
+        .send(newComment)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
+        });
+    });
+  });
 });
 
 describe("/api/users", () => {
