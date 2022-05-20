@@ -5,6 +5,7 @@ const {
   selectArticleComments,
   insertCommentByID,
 } = require("../models/articles.model");
+const { checkIfTopicExists } = require("../models/topics.model");
 
 exports.getArticleByID = (req, res, next) => {
   const { articleid } = req.params;
@@ -30,8 +31,13 @@ exports.patchArticleByID = (req, res, next) => {
 };
 
 exports.getAllArticles = (req, res, next) => {
-  selectAllArticles()
-    .then((result) => {
+  const { sort_by, order, topic } = req.query;
+  const promises = [selectAllArticles(sort_by, order, topic)];
+  if (topic) {
+    promises.push(checkIfTopicExists(topic));
+  }
+  Promise.all(promises)
+    .then(([result]) => {
       res.status(200).send({ articles: result });
     })
     .catch((err) => {
