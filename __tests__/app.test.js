@@ -589,7 +589,7 @@ describe("/api/users", () => {
   });
 });
 
-describe("/api/comments", () => {
+describe.only("/api/comments", () => {
   describe("DELETE /api/comments/:comment_id", () => {
     test("status: 204, should successfully delete the comment when passed correct comment id", () => {
       const comment_id = 4;
@@ -621,5 +621,3 @@ describe("/api/comments", () => {
     });
   });
 });
-//404 comment id in path dpes not rxist
-//400 comment id in path is not a number
