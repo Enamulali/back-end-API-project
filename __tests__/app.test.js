@@ -588,3 +588,38 @@ describe("/api/users", () => {
     });
   });
 });
+
+describe("/api/comments", () => {
+  describe("DELETE /api/comments/:comment_id", () => {
+    test("status: 204, should successfully delete the comment when passed correct comment id", () => {
+      const comment_id = 4;
+      return request(app).delete(`/api/comments/${comment_id}`).expect(204);
+    });
+  });
+  describe("ERRORS DELETE /api/comments/:comment_id", () => {
+    test("status: 400, should return bad request message when comment_id is invalid data type", () => {
+      const comment_id = "invalid_comment_id";
+      return request(app)
+        .delete(`/api/comments/${comment_id}`)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
+        });
+    });
+    test("status: 404, should return comnment does not exist error when comment_id does not exist", () => {
+      const comment_id = "100";
+      return request(app)
+        .delete(`/api/comments/${comment_id}`)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe(`comment: ${comment_id} does not exist`);
+          expect(res.body.detail).toBe(`please try again`);
+        });
+    });
+  });
+});
+//404 comment id in path dpes not rxist
+//400 comment id in path is not a number
