@@ -218,7 +218,7 @@ describe("/api/articles", () => {
           });
         });
     });
-    test("status: 200, should return all articles sorted in order of descending date", () => {
+    test("status: 200, should return all articles default sorted in order of descending date", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
@@ -426,6 +426,133 @@ describe("/api/articles", () => {
           expect(res.body.detail).toBe(
             "invalid data type, please enter a valid data type"
           );
+        });
+    });
+  });
+
+  describe("GET QUERIES /api/articles", () => {
+    test("status: 200, should return the articles sorted by votes", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("votes", {
+            descending: true,
+          });
+        });
+    });
+    test("status: 200, should return the articles sorted by author", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("author", {
+            descending: true,
+          });
+        });
+    });
+    test("status: 200, should return the articles sorted by title", () => {
+      return request(app)
+        .get("/api/articles?sort_by=title")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("title", {
+            descending: true,
+          });
+        });
+    });
+    test("ERROR: 400, should respond with bad request error if given invalid sort by query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=invalid_query")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
+        });
+    });
+    test("status: 200, should return the articles ordered in ascending order", () => {
+      return request(app)
+        .get("/api/articles?order=asc")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("created_at", {
+            ascending: true,
+          });
+        });
+    });
+    test("status: 200, should return the articles sorted by votes ordered in ascending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=votes&order=asc")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("votes", {
+            ascending: true,
+          });
+        });
+    });
+    test("status: 200, should return the articles sorted by author ordered in ascending order", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author&order=asc")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("author", {
+            ascending: true,
+          });
+        });
+    });
+    test("ERROR: 400, should respond with bad request error if given invalid order query", () => {
+      return request(app)
+        .get("/api/articles?order=invalid_query")
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
+        });
+    });
+    test("status: 200, should respond with all articles by topic queried", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((result) => {
+          result.body.articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
+    test("status: 200, should respond with empty array if topic exists but has no articles associated with it", () => {
+      return request(app)
+        .get("/api/articles?topic=paper")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeInstanceOf(Array);
+          expect(result.body.articles).toHaveLength(0);
+        });
+    });
+    test("ERROR: 400, should respond with bad request error message if topic query contains invalid data type", () => {
+      return request(app)
+        .get(`/api/articles?topic=${1234}`)
+        .expect(400)
+        .then((res) => {
+          expect(res.body.msg).toBe("bad request");
+          expect(res.body.detail).toBe(
+            "invalid data type, please enter a valid data type"
+          );
+        });
+    });
+    test("ERROR: 404, should respond with topic does not exist if passed topic which does not exist", () => {
+      const nonexistentTopic = "pigeons";
+      return request(app)
+        .get(`/api/articles?topic=${nonexistentTopic}`)
+        .expect(404)
+        .then((res) => {
+          expect(res.body.msg).toBe(
+            `topic: ${nonexistentTopic} does not exist`
+          );
+          expect(res.body.detail).toBe("please provide a different topic");
         });
     });
   });

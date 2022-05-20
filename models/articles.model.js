@@ -1,4 +1,6 @@
+const { type } = require("express/lib/response");
 const db = require("../db/connection");
+const { selectTopics } = require("./topics.model");
 
 exports.selectArticleByID = (articleid) => {
   const queryStr = `SELECT articles.*,
@@ -45,14 +47,42 @@ exports.updateArticleByID = (inc_votes, articleid) => {
   });
 };
 
-exports.selectAllArticles = () => {
+exports.selectAllArticles = (sort_by = "created_at", order = "desc", topic) => {
   let queryStr = `SELECT articles.*,
-  CAST(COUNT(comments.article_id) AS INT) AS comment_count
-  FROM articles 
-  LEFT JOIN comments ON comments.article_id = articles.article_id
-  GROUP BY articles.article_id ORDER BY created_at DESC`;
+      CAST(COUNT(comments.article_id) AS INT) AS comment_count
+      FROM articles 
+      LEFT JOIN comments ON comments.article_id = articles.article_id
+      `;
 
-  return db.query(queryStr).then((result) => {
+  const validSortBy = ["title", "author", "created_at", "votes"];
+  const validOrder = ["asc", "desc"];
+  const validTopic = [];
+
+  if (!isNaN(topic)) {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+      detail: "invalid data type, please enter a valid data type",
+    });
+  }
+
+  if (topic) {
+    validTopic.push(topic);
+    queryStr += ` WHERE articles.topic = $1`;
+  }
+
+  if (validSortBy.includes(sort_by) && validOrder.includes(order)) {
+    queryStr += ` 
+    GROUP BY articles.article_id
+    ORDER BY ${sort_by} ${order}`;
+  } else {
+    return Promise.reject({
+      status: 400,
+      msg: "bad request",
+      detail: "invalid data type, please enter a valid data type",
+    });
+  }
+  return db.query(queryStr, validTopic).then((result) => {
     return result.rows;
   });
 };
