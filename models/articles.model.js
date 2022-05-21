@@ -1,6 +1,6 @@
 const { type } = require("express/lib/response");
 const db = require("../db/connection");
-const { selectTopics } = require("./topics.model");
+const { selectTopics, checkIfTopicExists } = require("./topics.model");
 
 exports.selectArticleByID = (articleid) => {
   const queryStr = `SELECT articles.*,
@@ -85,6 +85,8 @@ exports.selectAllArticles = (sort_by = "created_at", order = "desc", topic) => {
   return db.query(queryStr, validTopic).then((result) => {
     return result.rows;
   });
+
+  return checkIfTopicExists(topic).then(() => {});
 };
 
 exports.selectArticleComments = (articleid) => {
