@@ -23,5 +23,94 @@
         }
       ]
     }
+  },
+  "GET /api/articles/articleid": {
+    "description": "serves an array of all topics",
+    "queries": ["author", "topic", "sort_by", "order"],
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 1,
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": "2020-07-09T20:11:00.000Z",
+          "votes": 100,
+          "comment_count": 11
+        }
+      ]
+    }
+  },
+  "PATCH /api/articles/:articleid": {
+    "description": "serves an article object with votes property incremented or decremented by given patch object",
+    "queries": [],
+    "exampleRequest": { "inc_votes": 1 },
+    "exampleResponse": {
+      "article": [
+        {
+          "article_id": 1,
+          "title": "Living in the shadow of a great man",
+          "topic": "mitch",
+          "author": "butter_bridge",
+          "body": "I find this existence challenging",
+          "created_at": "2020-07-09T20:11:00.000Z",
+          "votes": 101,
+          "comment_count": 11
+        }
+      ]
+    }
+  },
+  "GET /api/articles/:articleid/comments": {
+    "description": "serves an array with all comments associated with given article_id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 16,
+          "body": "This is a bad article name",
+          "article_id": 6,
+          "author": "butter_bridge",
+          "votes": 1,
+          "created_at": "2020-10-11T15:23:00.000Z"
+        }
+      ]
+    }
+  },
+  "POST /api/articles/:articleid/comments": {
+    "description": "serves a new comment object containing passed comment body for chosen article_id",
+    "queries": [],
+    "exampleRequest": {
+      "username": "icellusedkars",
+      "body": "This is a new comment"
+    },
+    "exampleResponse": {
+      "addedComment": {
+        "comment_id": 19,
+        "body": "This is a new comment",
+        "article_id": 1,
+        "author": "icellusedkars",
+        "votes": 0,
+        "created_at": "2022-05-21T18:04:39.304Z"
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "deletes a comment based on given comment_id",
+    "queries": [],
+    "exampleRequest": {}
+  },
+  "GET /api/users": {
+    "description": "serves an array with objects containing user information",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "butter_bridge",
+          "name": "jonny",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
   }
 }
