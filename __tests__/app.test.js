@@ -11,6 +11,17 @@ afterAll(() => {
   db.end();
 });
 
+describe("/api", () => {
+  test("status: 200, should respond with JSON object containing available endpoints on API ", () => {
+    return request(app)
+      .get("/api")
+      .expect(200)
+      .then((result) => {
+        expect(result.body).toBeInstanceOf(Object);
+      });
+  });
+});
+
 describe("/api/topics", () => {
   describe("GET /api/topics", () => {
     test("status: 200, should respond with all treasures", () => {
@@ -589,7 +600,7 @@ describe("/api/users", () => {
   });
 });
 
-describe.only("/api/comments", () => {
+describe("/api/comments", () => {
   describe("DELETE /api/comments/:comment_id", () => {
     test("status: 204, should successfully delete the comment when passed correct comment id", () => {
       const comment_id = 4;
