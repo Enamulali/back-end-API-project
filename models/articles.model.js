@@ -85,8 +85,6 @@ exports.selectAllArticles = (sort_by = "created_at", order = "desc", topic) => {
   return db.query(queryStr, validTopic).then((result) => {
     return result.rows;
   });
-
-  return checkIfTopicExists(topic).then(() => {});
 };
 
 exports.selectArticleComments = (articleid) => {
