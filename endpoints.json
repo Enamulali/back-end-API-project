@@ -25,8 +25,7 @@
     }
   },
   "GET /api/articles/articleid": {
-    "description": "serves an array of all topics",
-    "queries": ["author", "topic", "sort_by", "order"],
+    "description": "serves requested article",
     "exampleResponse": {
       "article": [
         {
