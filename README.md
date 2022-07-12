@@ -25,23 +25,23 @@ and `cd` into the directory
    ```
 
 4. Run `npm run setup-dbs` & `npm run seed` to setup and seed the development and test databases
-6. We have now successfully completed our setup:
-   - To run the app, use: `npm start`. The default port is 8080.
-   - To test the app, use: `npm test`
-   
-## Testing
 
-You can now test the api by using jest with the test files to test the api endpoints
 
-```
-npm t __tests__/app.test.js
-```
+### Testing
 
-If you wish to test the api with a separate app such as insomnia, the default port is 8080.
+5. We have now successfully completed our setup:
+   - To run the app, use: `npm start`. 
+   - If you wish to test the api with a separate app such as insomnia, the default port is 8080.
 You can do this by requesting
 
 ```
 localhost:8080/api
+```
+   - To test the app, use: `npm test`
+   You can test the api by using jest with the test files to test the api endpoints
+
+```
+npm t __tests__/app.test.js
 ```
 
 ## Endpoints
