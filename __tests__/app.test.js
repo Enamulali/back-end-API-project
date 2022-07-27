@@ -598,7 +598,7 @@ describe("/api/users", () => {
         });
     });
   });
-  describe.only("GET /api/users/username", () => {
+  describe("GET /api/users/username", () => {
     test("status: 200, responds with a single matching user", () => {
       const username = "butter_bridge";
       const userFromAPI = {

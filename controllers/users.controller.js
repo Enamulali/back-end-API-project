@@ -14,7 +14,6 @@ exports.getUserByName = (req, res, next) => {
   const { username } = req.params;
   selectUsersByName(username)
     .then((user) => {
-      console.log(user, "USER ");
       res.status(200).send({ user });
     })
     .catch((err) => {
