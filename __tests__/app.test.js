@@ -598,6 +598,25 @@ describe("/api/users", () => {
         });
     });
   });
+  describe.only("GET /api/users/username", () => {
+    test("status: 200, responds with a single matching user", () => {
+      const username = "butter_bridge";
+      const userFromAPI = {
+        username: "butter_bridge",
+        name: "jonny",
+        avatar_url:
+          "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg",
+      };
+      return request(app)
+        .get(`/api/users/${username}`)
+        .expect(200)
+        .then((result) => {
+          expect(result.body.user).toEqual(
+            expect.objectContaining(userFromAPI)
+          );
+        });
+    });
+  });
 });
 
 describe("/api/comments", () => {
