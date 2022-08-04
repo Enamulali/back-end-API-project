@@ -1,6 +1,6 @@
 # Northcoders News API
 
-This project is a social news API built using PSQL, express and node.js. The API was created with the following:
+This project is a social news API server built using PSQL, express and node.js. The API was created with the following:
 
 - PostgreSQL: creating, seeding, connecting to and querying the database
 - A model-view-controller pattern to handle server requests
