@@ -1,5 +1,7 @@
 const express = require("express");
 const cors = require("cors");
+const bodyParser = require("body-parser");
+
 const { getTopics } = require("./controllers/topics.controller");
 const {
   getArticleByID,
@@ -8,16 +10,17 @@ const {
   getArticleComments,
   postCommentByID,
 } = require("./controllers/articles.controller");
-
 const { getUsers, getUserByName } = require("./controllers/users.controller");
 const { deleteCommentById } = require("./controllers/comments.controller");
-const { getAPI } = require("./controllers/api.controller");
+const { getAPI, healthCheck } = require("./controllers/api.controller");
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(bodyParser.json());
 
+app.get("/", healthCheck);
 app.get("/api", getAPI);
 
 app.get("/api/topics", getTopics);
