@@ -9,7 +9,8 @@ This project is a social news API server built using PSQL, express and node.js. 
 - Heroku: hosting the API with a production database.
 
 ### To view the hosted version of this API, visit:
-https://enams-nc-news-api.herokuapp.com/api/articles
+
+https://enams-news-api.onrender.com/api/articles
 
 and view the live front-end application for this API here: https://nc-news-ea.netlify.app
 
@@ -23,10 +24,12 @@ Node.js (v17.x) and PostgreSQL (v13.6 or above).
 
 ### Instructions
 
-1. Clone the respository 
+1. Clone the respository
+
 ```
 git clone https://github.com/Enamulali/back-end-API-project.git
 ```
+
 and `cd` into the directory
 
 2. Run `npm install` to install dependencies
@@ -39,23 +42,24 @@ and `cd` into the directory
 
 4. Run `npm run setup-dbs` & `npm run seed` to setup and seed the development and test databases
 
-
 ### Testing
 
 5. We have now successfully completed our setup:
-   - To run the app, use: `npm start`. 
+   - To run the app, use: `npm start`.
    - If you wish to view the api in a separate app (e.g. insomnia), the default port is 8080.
-You can do this by requesting
+     You can do this by requesting
 
 ```
 localhost:8080/api
 ```
-   - To otherwise test the app, use: `npm test`
-   You can run jest with the test files to test the api endpoints
+
+- To otherwise test the app, use: `npm test`
+  You can run jest with the test files to test the api endpoints
 
 ```
 npm t __tests__/app.test.js
 ```
 
 ## Endpoints
-The endpoint of /api will return a JSON of all endpoints available on the api and all possible queries.
+
+The endpoint of `/api` will return a JSON of all endpoints available on the api and all possible queries.
