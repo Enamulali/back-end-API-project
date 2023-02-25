@@ -1,6 +1,5 @@
 const express = require("express");
 const cors = require("cors");
-const bodyParser = require("body-parser");
 
 const { getTopics } = require("./controllers/topics.controller");
 const {
@@ -18,7 +17,6 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use(bodyParser.json());
 
 app.get("/", healthCheck);
 app.get("/api", getAPI);
